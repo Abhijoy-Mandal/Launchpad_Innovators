@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as BABYLON from '@babylonjs/core';
 import createSun from './SunFunction'
-import createAsteroids from './AsteroidFunction';
+import AsteroidFunction from './AsteroidFunction';
 
 const BabylonVisualizer = () => {
   const canvasRef = useRef(null); // Reference to the canvas DOM element
@@ -24,10 +24,18 @@ const BabylonVisualizer = () => {
     // Create the scene
     const scene = createScene();
     createSun(scene, scale)
-    createAsteroids(scene, scale)
+    var box = AsteroidFunction.createAsteroids(scene, scale)
+
+    var propagateBodies = function() {
+        var matrices = AsteroidFunction.updateAsteroids(box.thinInstanceGetWorldMatrices())
+        // console.log(matrices)
+        box.thinInstanceSetBuffer("matrix", matrices, 16);
+        box.thinInstanceBufferUpdated("matrix")
+    }; 
 
     // Render the scene every frame
     engine.runRenderLoop(() => {
+      propagateBodies();
       scene.render();
     });
 
