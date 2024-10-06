@@ -18,7 +18,7 @@ function App() {
           <Filter/>
         </div>
         {/* <Comet/> */}
-        <Sun/>
+        <BabylonVisualizer/>
         {/* <Planet/> */}
 
       </div>
