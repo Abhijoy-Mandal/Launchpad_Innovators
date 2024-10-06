@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Launchpad_Innovators/static/css/main.f89cf78d.css",
+    "main.js": "/Launchpad_Innovators/static/js/main.11c338a9.js",
+    "static/js/453.abd36b29.chunk.js": "/Launchpad_Innovators/static/js/453.abd36b29.chunk.js",
+    "index.html": "/Launchpad_Innovators/index.html",
+    "main.f89cf78d.css.map": "/Launchpad_Innovators/static/css/main.f89cf78d.css.map",
+    "main.11c338a9.js.map": "/Launchpad_Innovators/static/js/main.11c338a9.js.map",
+    "453.abd36b29.chunk.js.map": "/Launchpad_Innovators/static/js/453.abd36b29.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f89cf78d.css",
+    "static/js/main.11c338a9.js"
+  ]
+}
