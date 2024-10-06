@@ -10,6 +10,7 @@ const BabylonVisualizer = () => {
     // Initialize Babylon engine and scene after component mounts
     const canvas = canvasRef.current;
     const engine = new BABYLON.Engine(canvas, true);
+    const scale = 25
 
     // Create a basic scene with a camera and a light
     var createScene = function() {
@@ -22,8 +23,8 @@ const BabylonVisualizer = () => {
 
     // Create the scene
     const scene = createScene();
-    createSun(scene)
-    createAsteroids(scene)
+    createSun(scene, scale)
+    createAsteroids(scene, scale)
 
     // Render the scene every frame
     engine.runRenderLoop(() => {

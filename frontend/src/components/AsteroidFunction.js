@@ -9,7 +9,7 @@ function gaussianRandom(mean=0, stdev=1) {
     return z * stdev + mean;
 }
 
-const createAsteroids = function(scene){
+const createAsteroids = function(scene, scale){
     // var box = BABYLON.BoxBuilder.CreateBox("root", {size: 1});
     var box = BABYLON.SphereBuilder.CreateSphere('root', { segments:5, diameter: 1 }, scene);
     
@@ -21,7 +21,7 @@ const createAsteroids = function(scene){
 
     // let instanceCount = numPerSide * numPerSide * numPerSide;
     let instanceCount = 50000;
-    let orbitRadius = 300;
+    let orbitRadius = scale*12;
     let orbitRdiusSpread = orbitRadius/4
     let matricesData = new Float32Array(16 * instanceCount);
     let colorData = new Float32Array(4 * instanceCount);
