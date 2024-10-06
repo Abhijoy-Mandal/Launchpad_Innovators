@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import * as BABYLON from '@babylonjs/core';
 
 
-const createSun = function(scene){
-    const scale = 25
+const createSun = function(scene, scale){
       scene.clearColor = new BABYLON.Color4(0, 0, 0, 1); // Light blue background
 
       // Create a sphere mesh (simple 3D object)
