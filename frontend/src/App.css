@@ -1,3 +1,22 @@
+#filterButton{
+  margin:20px;
+  width: 5vw;         /* 20% of the viewport width */
+  height: 3vh;        /* 10% of the viewport height */
+  color:white;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: transform 2s ease;
+}
+
+#filterButton:hover {
+  background-color: #b3e0f7;
+  transform: scale(2);
+}
+
+
+
+
+
+
 .App {
   text-align: center;
 }

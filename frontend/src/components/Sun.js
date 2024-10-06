@@ -12,6 +12,7 @@ const Sun = () => {
     // Create a basic scene with a camera and a light
     const createScene = () => {
       const scene = new BABYLON.Scene(engine);
+      scene.clearColor = new BABYLON.Color4(0, 0, 0, 1); // Light blue background
 
       // Create a simple camera looking at the origin
       const camera = new BABYLON.ArcRotateCamera(
