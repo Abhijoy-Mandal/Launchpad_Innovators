@@ -9,9 +9,41 @@ function gaussianRandom(mean=0, stdev=1) {
     return z * stdev + mean;
 }
 
+const setAsteroids = function(scale, num_entities, matrices){
+    var stride = 16;
+    var len = matrices.length
+    num_entities = Math.min(len, num_entities)
+    let matricesData = new Float32Array(stride * matrices.length);
+    var m = BABYLON.Matrix.Identity();
+    let orbitRadius = scale*12;
+    let orbitRdiusSpread = orbitRadius/4
+    for(var i = 0; i<num_entities; i++){
+        m.m[12] = Math.random()*orbitRadius;
+        // m.m[12] = gaussianRandom(0 , orbitRadius + orbitRdiusSpread);
+        m.m[14] = Math.sqrt(orbitRadius*orbitRadius - m.m[12]*m.m[12]) + (2*Math.random()-1)*orbitRdiusSpread;
+        m.m[12] = m.m[12] + (2*Math.random()-1)*orbitRdiusSpread;
+        if (Math.random()<0.5){
+            m.m[14] = -1*m.m[14]
+        }
+        if (Math.random()<0.5){
+            m.m[12] = -1*m.m[12]
+        }
+        m.m[13] = gaussianRandom(0, orbitRdiusSpread/5)
+        // m.m[13] = (2*Math.random()-1)*orbitRdiusSpread/
+        m.copyToArray(matricesData, i * 16);
+    }
+    m = BABYLON.Matrix.Identity();
+    for(var i = num_entities; i<len; i++){
+        m.copyToArray(matricesData, i * 16);
+    }
+    return matricesData
+
+}
+
 const createAsteroids = function(scene, scale){
     // var box = BABYLON.BoxBuilder.CreateBox("root", {size: 1});
     var box = BABYLON.SphereBuilder.CreateSphere('root', { segments:5, diameter: 1 }, scene);
+    box.thinInstanceEnablePicking = true;
     
     // var numPerSide = 40, size = 100, ofst = size / (numPerSide - 1);
 
@@ -20,7 +52,7 @@ const createAsteroids = function(scene, scale){
     //var col = 0, index = 0;
 
     // let instanceCount = numPerSide * numPerSide * numPerSide;
-    let instanceCount = 50000;
+    let instanceCount = 5000;
     let orbitRadius = scale*12;
     let orbitRdiusSpread = orbitRadius/4
     let matricesData = new Float32Array(16 * instanceCount);
@@ -40,9 +72,9 @@ const createAsteroids = function(scene, scale){
         // m.m[13] = (2*Math.random()-1)*orbitRdiusSpread/5
         m.copyToArray(matricesData, x * 16);
 
-        colorData[x * 4 + 0] = ((x & 0xff0000) >> 16) / 255;
-        colorData[x * 4 + 1] = ((x & 0x00ff00) >>  8) / 255;
-        colorData[x * 4 + 2] = ((x & 0x0000ff) >>  0) / 255;
+        colorData[x * 4 + 0] = (((x+50000) & 0xff0000) >> 16) / 255;
+        colorData[x * 4 + 1] = (((x+50000) & 0x00ff00) >>  8) / 255;
+        colorData[x * 4 + 2] = (((x+50000) & 0x0000ff) >>  0) / 255;
         colorData[x * 4 + 3] = 1.0;
     }
     box.thinInstanceSetBuffer("matrix", matricesData, 16);
@@ -54,7 +86,7 @@ const createAsteroids = function(scene, scale){
 
     return box;
 };
-
+// array e [], v []
 const updateAsteroids = function(matrices){
     // console.log(matrices)
     const stride = 16
@@ -68,8 +100,10 @@ const updateAsteroids = function(matrices){
         var y = matrices[i].m[14];
         // console.log(matrices[i])
         // console.log(x, y)
+        // x = rcos(theta) -> x = r cos(theta + rate) = rcos(theta)cos(rate) - rsin(theta)sin(rate) -> x*cos(rate) - y*sin(rate)
+        // y = rsin(theta) ->
         m.m[12] = x*Math.cos(rate) - y*Math.sin(rate);
-        m.m[14] = y*Math.cos(rate) + x*Math.sin(rate)
+        m.m[14] = y*Math.cos(rate) + x*Math.sin(rate);
         // m.m[12] = x;
         // m.m[14] = y;
         m.m[13] = matrices[i].m[13];
@@ -78,4 +112,4 @@ const updateAsteroids = function(matrices){
     return matricesData
 }
 
-export default {createAsteroids, updateAsteroids}
+export default {createAsteroids, updateAsteroids, setAsteroids}

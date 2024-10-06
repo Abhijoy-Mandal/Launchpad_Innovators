@@ -14,9 +14,9 @@ function App() {
   return (
     <div className="App">
       <div style={{ width: '100vw', height: '100vh',  }}>
-        <div>
-          <Filter/>
-        </div>
+        {/* <div>
+          <Filter id="filter"/>
+        </div> */}
         {/* <Comet/> */}
         <BabylonVisualizer/>
         {/* <Planet/> */}
