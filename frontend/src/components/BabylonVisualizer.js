@@ -27,7 +27,6 @@ const BabylonVisualizer = () => {
   const toggleInfo = () =>{
     setShowInfo(!showInfo);
   };
-
   useEffect(() => {
     // Initialize Babylon engine and scene after component mounts
     const canvas = canvasRef.current;
@@ -145,14 +144,14 @@ const BabylonVisualizer = () => {
 
   return (
     <div>
+      <div>
+        <Filter parentEntityCount={setEntityCount}/>
+      </div>
       <div style={{ width: '100vw', height: '100vh',  }}>
         <canvas
         ref={canvasRef}
         style={{ width: '100%', height: '100%', display: 'block' }}
         />
-      </div>
-      <div>
-        <Filter parentEntityCount={setEntityCount}/>
       </div>
 
       {showInfo && 
