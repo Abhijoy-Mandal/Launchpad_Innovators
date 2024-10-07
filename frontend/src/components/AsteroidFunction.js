@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import * as BABYLON from '@babylonjs/core';
+import calculateKeplerianPosition from './Keplerian';
 
 function gaussianRandom(mean=0, stdev=1) {
     const u = 1 - Math.random(); // Converting [0,1) to (0,1]
@@ -9,29 +10,35 @@ function gaussianRandom(mean=0, stdev=1) {
     return z * stdev + mean;
 }
 
-const setAsteroids = function(scale, num_entities, matrices){
+const setAsteroids = function(scale, metadata, matrices){
     var stride = 16;
     var len = matrices.length
-    num_entities = Math.min(len, num_entities)
+    var num_entities = Math.min(len, metadata.names.length)
     let matricesData = new Float32Array(stride * matrices.length);
     var m = BABYLON.Matrix.Identity();
     let orbitRadius = scale*12;
     let orbitRdiusSpread = orbitRadius/4
-    for(var i = 0; i<num_entities; i++){
-        m.m[12] = Math.random()*orbitRadius;
-        // m.m[12] = gaussianRandom(0 , orbitRadius + orbitRdiusSpread);
-        m.m[14] = Math.sqrt(orbitRadius*orbitRadius - m.m[12]*m.m[12]) + (2*Math.random()-1)*orbitRdiusSpread;
-        m.m[12] = m.m[12] + (2*Math.random()-1)*orbitRdiusSpread;
-        if (Math.random()<0.5){
-            m.m[14] = -1*m.m[14]
-        }
-        if (Math.random()<0.5){
-            m.m[12] = -1*m.m[12]
-        }
-        m.m[13] = gaussianRandom(0, orbitRdiusSpread/5)
+    console.log(metadata)
+    for(var j = 0; j<num_entities; j++){
+        var vec = calculateKeplerianPosition(metadata.a[j], metadata.e[j], metadata.i[j], metadata.om[j], metadata.w[j], metadata.ma[j])
+        // m.m[12] = Math.random()*orbitRadius;
+        // // m.m[12] = gaussianRandom(0 , orbitRadius + orbitRdiusSpread);
+        // m.m[14] = Math.sqrt(orbitRadius*orbitRadius - m.m[12]*m.m[12]) + (2*Math.random()-1)*orbitRdiusSpread;
+        // m.m[12] = m.m[12] + (2*Math.random()-1)*orbitRdiusSpread;
+        // if (Math.random()<0.5){
+        //     m.m[14] = -1*m.m[14]
+        // }
+        // if (Math.random()<0.5){
+        //     m.m[12] = -1*m.m[12]
+        // }
+        // m.m[13] = gaussianRandom(0, orbitRdiusSpread/5)
         // m.m[13] = (2*Math.random()-1)*orbitRdiusSpread/
-        m.copyToArray(matricesData, i * 16);
+        m.m[12] = vec._x*700
+        m.m[14] = vec._y*700
+        m.m[13] = vec._z*700
+        m.copyToArray(matricesData, j * 16);
     }
+    console.log(matricesData.slice(0, 16))
     m = BABYLON.Matrix.Identity();
     for(var i = num_entities; i<len; i++){
         m.copyToArray(matricesData, i * 16);
@@ -42,7 +49,7 @@ const setAsteroids = function(scale, num_entities, matrices){
 
 const createAsteroids = function(scene, scale){
     // var box = BABYLON.BoxBuilder.CreateBox("root", {size: 1});
-    var box = BABYLON.SphereBuilder.CreateSphere('root', { segments:5, diameter: 1 }, scene);
+    var box = BABYLON.SphereBuilder.CreateSphere('root', { segments:5, diameter: 20 }, scene);
     box.thinInstanceEnablePicking = true;
     
     // var numPerSide = 40, size = 100, ofst = size / (numPerSide - 1);
@@ -58,18 +65,18 @@ const createAsteroids = function(scene, scale){
     let matricesData = new Float32Array(16 * instanceCount);
     let colorData = new Float32Array(4 * instanceCount);
     for (var x=0; x<instanceCount; x++){
-        m.m[12] = Math.random()*orbitRadius;
-        // m.m[12] = gaussianRandom(0 , orbitRadius + orbitRdiusSpread);
-        m.m[14] = Math.sqrt(orbitRadius*orbitRadius - m.m[12]*m.m[12]) + (2*Math.random()-1)*orbitRdiusSpread;
-        m.m[12] = m.m[12] + (2*Math.random()-1)*orbitRdiusSpread;
-        if (Math.random()<0.5){
-            m.m[14] = -1*m.m[14]
-        }
-        if (Math.random()<0.5){
-            m.m[12] = -1*m.m[12]
-        }
-        m.m[13] = gaussianRandom(0, orbitRdiusSpread/5)
-        // m.m[13] = (2*Math.random()-1)*orbitRdiusSpread/5
+        // m.m[12] = Math.random()*orbitRadius;
+        // // m.m[12] = gaussianRandom(0 , orbitRadius + orbitRdiusSpread);
+        // m.m[14] = Math.sqrt(orbitRadius*orbitRadius - m.m[12]*m.m[12]) + (2*Math.random()-1)*orbitRdiusSpread;
+        // m.m[12] = m.m[12] + (2*Math.random()-1)*orbitRdiusSpread;
+        // if (Math.random()<0.5){
+        //     m.m[14] = -1*m.m[14]
+        // }
+        // if (Math.random()<0.5){
+        //     m.m[12] = -1*m.m[12]
+        // }
+        // m.m[13] = gaussianRandom(0, orbitRdiusSpread/5)
+        // // m.m[13] = (2*Math.random()-1)*orbitRdiusSpread/5
         m.copyToArray(matricesData, x * 16);
 
         colorData[x * 4 + 0] = (((x+50000) & 0xff0000) >> 16) / 255;

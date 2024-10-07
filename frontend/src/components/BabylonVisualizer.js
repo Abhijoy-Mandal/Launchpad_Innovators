@@ -9,7 +9,7 @@ const BabylonVisualizer = () => {
   const [boxRef, setBoxRef] = useState(null);
   const [entityCount, setEntityCount] = useState(5000)
   // names = Array of strings -> names[index]
-  const scale = 25
+  const scale = 75
 
   useEffect(() => {
     // Initialize Babylon engine and scene after component mounts
@@ -19,9 +19,9 @@ const BabylonVisualizer = () => {
     // Create a basic scene with a camera and a light
     var createScene = function() {
         var scene = new BABYLON.Scene(engine);
-        var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 5, Math.PI / 3, 500, BABYLON.Vector3.Zero(), scene);
+        var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 5, Math.PI / 3, 5000, BABYLON.Vector3.Zero(), scene);
         camera.attachControl(canvas, true);
-        var highlight_sphere = BABYLON.SphereBuilder.CreateSphere('highlight', { segments:10, diameter: 2 }, scene);
+        var highlight_sphere = BABYLON.SphereBuilder.CreateSphere('highlight', { segments:10, diameter: 30 }, scene);
         const CoreMaterial = new BABYLON.StandardMaterial("highlight_material", scene)
         CoreMaterial.diffuseColor =  new BABYLON.Color3(1,1,1)
         CoreMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); 
@@ -53,6 +53,7 @@ const BabylonVisualizer = () => {
               var transf = asts.thinInstanceGetWorldMatrices()[result.thinInstanceIndex]
               highlight_sphere.position = new BABYLON.Vector3(transf.m[12], transf.m[13], transf.m[14])
               hl.removeAllMeshes();
+              console.log(entityCount.names[result.thinInstanceIndex])
               // hl.addMesh(highlight_sphere, BABYLON.Color3.Green());
             }
             else{
@@ -103,7 +104,6 @@ const BabylonVisualizer = () => {
       var matrices =AsteroidFunction.setAsteroids(scale, entityCount, boxRef.thinInstanceGetWorldMatrices())
       boxRef.thinInstanceSetBuffer("matrix", matrices, 16);
       boxRef.thinInstanceBufferUpdated("matrix")
-      console.log(entityCount)
     }
   }, [entityCount] )
 

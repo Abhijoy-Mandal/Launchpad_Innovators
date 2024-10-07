@@ -23,7 +23,7 @@ const FilterButton = ({parentEntityCount}) => {
   };
   useEffect(() => {
     const getFromAPI = () => {
-      var url = "https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=full_name,epoch,e,a,q,i,om,w&limit=100"
+      var url = "https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=full_name,e,a,ma,i,om,w&limit=1000"
       if (asteroid && !comets){
         url = url + "&sb-kind=a";
       }
@@ -32,7 +32,7 @@ const FilterButton = ({parentEntityCount}) => {
       }
       if (asteroid && comets){
         setEntityCount(0)
-        parentEntityCount(0)
+        parentEntityCount({"count": 0})
         return
       }
       if (PHO && !NEO){
@@ -43,7 +43,7 @@ const FilterButton = ({parentEntityCount}) => {
       }
       if (PHO && NEO){
         setEntityCount(0)
-        parentEntityCount(0)
+        parentEntityCount({"count": 0})
         return
       }
       if (hasSatellite){
@@ -60,8 +60,42 @@ const FilterButton = ({parentEntityCount}) => {
     }
 
     const processResponse = (data) => {
+      var names = Array();
+      var e = Array();
+      var a = Array();
+      var ma = Array();
+      var i = Array();
+      var om = Array();
+      var w = Array(); 
+      for (var j = 0; j<data.data.length; j++){
+        names = [...names, data.data[j][0]];
+        e = [...e, parseFloat(data.data[j][1])];
+        a = [...a, parseFloat(data.data[j][2])];
+        ma = [...ma, parseFloat(data.data[j][3])];
+        i = [...i, parseFloat(data.data[j][4])];
+        om = [...om, parseFloat(data.data[j][5])];
+        w = [...w, parseFloat(data.data[j][6])];
+      }
+      // console.log(names)
+      // console.log(e)
+      // console.log(a)
+      // console.log(ma)
+      // console.log(i)
+      // console.log(om)
+      // console.log(w)
+      var metadata = {
+        "names": names,
+        "e": e,
+        "a": a,
+        "ma": ma,
+        "i": i,
+        "om": om,
+        "w": w,
+        "count": data.count
+      }
       setEntityCount(data.count)
-      parentEntityCount(data.count)
+      parentEntityCount(metadata)
+      
     }
     getFromAPI();
     return () => {

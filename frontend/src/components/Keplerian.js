@@ -30,3 +30,5 @@ function calculateKeplerianPosition(a, e, i, om, w, ma) {
 
     return new BABYLON.Vector3(x, y, z);
 }
+
+export default calculateKeplerianPosition
