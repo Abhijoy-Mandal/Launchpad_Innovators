@@ -6,10 +6,10 @@
   height: '100%';
   backgroundColor: 'rgba(0, 0, 0, 0.5)';
   display: 'flex';
-  justifyContent: 'center';
-  alignItems: 'center';
+  justifyContent: 'left';
+  alignItems: 'left';
 }
 .header{
-    border-bottom: solid white 5px;
+    border-bottom: solid white 1px;
 }
 

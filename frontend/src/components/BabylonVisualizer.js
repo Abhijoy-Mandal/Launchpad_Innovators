@@ -8,7 +8,7 @@ import InfoBox from './InfoPopUp';
 const BabylonVisualizer = () => {
   const canvasRef = useRef(null); // Reference to the canvas DOM element
   const [boxRef, setBoxRef] = useState(null);
-  const [entityCount, setEntityCount] = useState(5000)
+  const [entityCount, setEntityCount] = useState(null)
   // names = Array of strings -> names[index]
   const scale = 75
 
@@ -67,16 +67,19 @@ const BabylonVisualizer = () => {
               var asts = scene.getMeshByName('root')
               var transf = asts.thinInstanceGetWorldMatrices()[result.thinInstanceIndex]
               highlight_sphere.position = new BABYLON.Vector3(transf.m[12], transf.m[13], transf.m[14])
-              setname(entityCount.names[result.thinInstanceIndex]);
-              sete(entityCount.e[result.thinInstanceIndex]);
-              seta (entityCount.a[result.thinInstanceIndex]);
-              setma( entityCount.ma[result.thinInstanceIndex]);
-              seti (entityCount.i[result.thinInstanceIndex]);
-              setom( entityCount.om[result.thinInstanceIndex]);
-              setw (entityCount.w[result.thinInstanceIndex]);
-              toggleInfo();
+              console.log(entityCount)
+              if (entityCount){
+                setShowInfo(true);
+                setname(entityCount.names[result.thinInstanceIndex]);
+                sete(entityCount.e[result.thinInstanceIndex]);
+                seta (entityCount.a[result.thinInstanceIndex]);
+                setma( entityCount.ma[result.thinInstanceIndex]);
+                seti (entityCount.i[result.thinInstanceIndex]);
+                setom( entityCount.om[result.thinInstanceIndex]);
+                setw (entityCount.w[result.thinInstanceIndex]);
+              }
               hl.removeAllMeshes();
-              console.log(entityCount.names[result.thinInstanceIndex])
+              // console.log(entityCount.names[result.thinInstanceIndex])
               // hl.addMesh(highlight_sphere, BABYLON.Color3.Green());
             }
             else{
@@ -128,7 +131,12 @@ const BabylonVisualizer = () => {
       boxRef.thinInstanceSetBuffer("matrix", matrices, 16);
       boxRef.thinInstanceBufferUpdated("matrix")
     }
-  }, [entityCount] )
+  }, [entityCount] );
+
+  const closeMenu = (e) => {
+    // Close menu if clicked outside the box
+      setShowInfo(false);
+  };
 
   return (
     <div>
@@ -141,12 +149,41 @@ const BabylonVisualizer = () => {
         style={{ width: '100%', height: '100%', display: 'block' }}
         />
       </div>
-      {showInfo && <InfoBox name = {name} e={e} a={a} ma ={ma} i ={i} om ={om} w ={w} />
+
+      {showInfo && 
+      <div style={overlayStyle}>
+        <div className="menu-box" style={boxStyle}>
+        <InfoBox name = {name} e={e} a={a} ma ={ma} i ={i} om ={om} w ={w} />
+        </div>
+        <div>
+          <button onClick={closeMenu}> close </button>
+        </div>
+      </div>
       }
 
 
     </div>
   );
+};
+
+
+const overlayStyle = {
+  position: 'fixed',
+  top: '100px',
+  left: '10px',
+  width: '30%',
+  height: '30%',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
+const boxStyle = {
+  backgroundColor: 'rgba(150, 150, 150, 0.8)',
+  padding: '20px',
+  borderRadius: '10px',
+  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
 };
 
 export default BabylonVisualizer;

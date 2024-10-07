@@ -4,12 +4,12 @@ import '../styles/InfoBox.css';
 const InfoBox = ({name,e,a,ma,i,om,w}) => {
 
     return (
-        <div class = 'info-box'>
-            <div class='header'>
+        <div className = 'info-box'>
+            <div className='header'>
                 <h2>{name}</h2>
             </div>
-            <div class='properties'>
-                <ul>
+            <div className='properties'>
+                <ul padding='0'>
                     <li> eccentricity: {e}</li>
                     <li> semimajor axis: {a}</li>
                     <li> inclination: {i}</li>

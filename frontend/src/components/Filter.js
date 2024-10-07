@@ -1,5 +1,6 @@
 import { PhotoDome } from '@babylonjs/core';
 import React, { useEffect, useState } from 'react';
+// import Text from 'react';
 //import '../styles/filter.css';
 //import BabylonVisualizer from './BabylonVisualizer';
 
@@ -174,9 +175,9 @@ const FilterButton = ({parentEntityCount}) => {
               </label>
             </div>
             <div>
-              <text>
+              <label>
                 Found {entityCount} entities
-              </text>
+              </label>
             </div>
           </div>
         </div>
