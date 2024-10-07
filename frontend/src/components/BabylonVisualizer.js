@@ -10,7 +10,7 @@ const BabylonVisualizer = () => {
   const engineRef = useRef(null);
   const [boxRef, setBoxRef] = useState(null);
   const [entityCount, setEntityCount] = useState(null)
-  const [metadata, setMetadata] =  useState(null);
+  const [renderBeganVis, setRenderBeganVis] = useState(false);
   // names = Array of strings -> names[index]
   const scale = 75
 
@@ -69,8 +69,8 @@ const BabylonVisualizer = () => {
               var asts = scene.getMeshByName('root')
               var transf = asts.thinInstanceGetWorldMatrices()[result.thinInstanceIndex]
               highlight_sphere.position = new BABYLON.Vector3(transf.m[12], transf.m[13], transf.m[14])
-              console.log(metadata)
-              if (entityCount){
+              console.log(entityCount);
+              if (entityCount !=null){
                 setShowInfo(true);
                 setname(entityCount.names[result.thinInstanceIndex]);
                 sete(entityCount.e[result.thinInstanceIndex]);
@@ -120,22 +120,22 @@ const BabylonVisualizer = () => {
     window.addEventListener('resize', () => {
       engine.resize();
     });
+    setRenderBeganVis(true)
 
     return () => {
       // Clean up Babylon resources when component unmounts
       engine.dispose();
     };
-  }, []);
+  }, [entityCount]);
 
   useEffect(() => {
-    if(boxRef){
+    console.log(entityCount)
+    if(renderBeganVis && boxRef && entityCount!=null){
       var matrices =AsteroidFunction.setAsteroids(scale, entityCount, boxRef.thinInstanceGetWorldMatrices());
       boxRef.thinInstanceSetBuffer("matrix", matrices, 16);
       boxRef.thinInstanceBufferUpdated("matrix");
-      setMetadata(entityCount);
-      
     }
-  }, [entityCount] );
+  }, [entityCount, boxRef, renderBeganVis] );
 
   const closeMenu = (e) => {
     // Close menu if clicked outside the box

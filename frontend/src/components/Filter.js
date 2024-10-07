@@ -13,6 +13,7 @@ const FilterButton = ({parentEntityCount}) => {
   const [NEO, setNEO] = useState(false);
   const [hasSatellite, setHasSatellite] = useState(false);
   const [numbered, setNumbered] = useState(false);
+  const [renderBegan, setRenderBegan] = useState(false);
 
   const [entityCount, setEntityCount] = useState(0);
   // const visulaizer = document.getElementById("visualizer");
@@ -23,6 +24,10 @@ const FilterButton = ({parentEntityCount}) => {
     setShowMenu(!showMenu);
   };
   useEffect(() => {
+    if (!renderBegan){
+      return () => {
+      };
+    }
     const getFromAPI = () => {
       var url = "https://hidden-plains-85874-9c470605fc4e.herokuapp.com/https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=full_name,e,a,ma,i,om,w&limit=1000"
       if (asteroid && !comets){
@@ -85,13 +90,13 @@ const FilterButton = ({parentEntityCount}) => {
       // console.log(om)
       // console.log(w)
       var metadata = {
-        "names": names,
-        "e": e,
-        "a": a,
-        "ma": ma,
-        "i": i,
-        "om": om,
-        "w": w,
+        "names": [...names],
+        "e": [...e],
+        "a": [...a],
+        "ma": [...ma],
+        "i": [...i],
+        "om": [...om],
+        "w": [...w],
         "count": data.count
       }
       setEntityCount(data.count)
@@ -112,6 +117,7 @@ const FilterButton = ({parentEntityCount}) => {
         //val = true
         setVal(true);
       }
+      setRenderBegan(true)
       //console.log(val)
       // getFromAPI();
     };
