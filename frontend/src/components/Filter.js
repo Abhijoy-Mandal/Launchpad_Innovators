@@ -24,7 +24,7 @@ const FilterButton = ({parentEntityCount}) => {
   };
   useEffect(() => {
     const getFromAPI = () => {
-      var url = "https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=full_name,e,a,ma,i,om,w&limit=1000"
+      var url = "https://hidden-plains-85874-9c470605fc4e.herokuapp.com/https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=full_name,e,a,ma,i,om,w&limit=1000"
       if (asteroid && !comets){
         url = url + "&sb-kind=a";
       }

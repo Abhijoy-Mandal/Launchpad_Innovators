@@ -7,8 +7,10 @@ import InfoBox from './InfoPopUp';
 
 const BabylonVisualizer = () => {
   const canvasRef = useRef(null); // Reference to the canvas DOM element
+  const engineRef = useRef(null);
   const [boxRef, setBoxRef] = useState(null);
   const [entityCount, setEntityCount] = useState(null)
+  const [metadata, setMetadata] =  useState(null);
   // names = Array of strings -> names[index]
   const scale = 75
 
@@ -30,6 +32,7 @@ const BabylonVisualizer = () => {
     // Initialize Babylon engine and scene after component mounts
     const canvas = canvasRef.current;
     const engine = new BABYLON.Engine(canvas, true);
+    engineRef.current = engine;
 
     // Create a basic scene with a camera and a light
     var createScene = function() {
@@ -67,7 +70,7 @@ const BabylonVisualizer = () => {
               var asts = scene.getMeshByName('root')
               var transf = asts.thinInstanceGetWorldMatrices()[result.thinInstanceIndex]
               highlight_sphere.position = new BABYLON.Vector3(transf.m[12], transf.m[13], transf.m[14])
-              console.log(entityCount)
+              console.log(metadata)
               if (entityCount){
                 setShowInfo(true);
                 setname(entityCount.names[result.thinInstanceIndex]);
@@ -127,9 +130,11 @@ const BabylonVisualizer = () => {
 
   useEffect(() => {
     if(boxRef){
-      var matrices =AsteroidFunction.setAsteroids(scale, entityCount, boxRef.thinInstanceGetWorldMatrices())
+      var matrices =AsteroidFunction.setAsteroids(scale, entityCount, boxRef.thinInstanceGetWorldMatrices());
       boxRef.thinInstanceSetBuffer("matrix", matrices, 16);
-      boxRef.thinInstanceBufferUpdated("matrix")
+      boxRef.thinInstanceBufferUpdated("matrix");
+      setMetadata(entityCount);
+      
     }
   }, [entityCount] );
 
@@ -140,14 +145,14 @@ const BabylonVisualizer = () => {
 
   return (
     <div>
-      <div>
-        <Filter parentEntityCount={setEntityCount}/>
-      </div>
       <div style={{ width: '100vw', height: '100vh',  }}>
         <canvas
         ref={canvasRef}
         style={{ width: '100%', height: '100%', display: 'block' }}
         />
+      </div>
+      <div>
+        <Filter parentEntityCount={setEntityCount}/>
       </div>
 
       {showInfo && 
