@@ -3,6 +3,7 @@ import * as BABYLON from '@babylonjs/core';
 import createSun from './SunFunction'
 import AsteroidFunction from './AsteroidFunction';
 import Filter from './Filter';
+import InfoBox from './InfoPopUp';
 
 const BabylonVisualizer = () => {
   const canvasRef = useRef(null); // Reference to the canvas DOM element
@@ -10,6 +11,20 @@ const BabylonVisualizer = () => {
   const [entityCount, setEntityCount] = useState(5000)
   // names = Array of strings -> names[index]
   const scale = 75
+
+  // Hooks created for the info we show on the pop up
+  const [showInfo, setShowInfo] = useState(false);
+  const [name, setname] = useState("");
+  const [e, sete] = useState(-1);
+  const [a, seta] = useState(-1);
+  const [i, seti] = useState(-1);
+  const [om, setom] = useState(-1);
+  const [ma, setma] = useState(-1);
+  const [w, setw] = useState(-1);
+
+  const toggleInfo = () =>{
+    setShowInfo(!showInfo);
+  };
 
   useEffect(() => {
     // Initialize Babylon engine and scene after component mounts
@@ -52,6 +67,14 @@ const BabylonVisualizer = () => {
               var asts = scene.getMeshByName('root')
               var transf = asts.thinInstanceGetWorldMatrices()[result.thinInstanceIndex]
               highlight_sphere.position = new BABYLON.Vector3(transf.m[12], transf.m[13], transf.m[14])
+              setname(entityCount.names[result.thinInstanceIndex]);
+              sete(entityCount.e[result.thinInstanceIndex]);
+              seta (entityCount.a[result.thinInstanceIndex]);
+              setma( entityCount.ma[result.thinInstanceIndex]);
+              seti (entityCount.i[result.thinInstanceIndex]);
+              setom( entityCount.om[result.thinInstanceIndex]);
+              setw (entityCount.w[result.thinInstanceIndex]);
+              toggleInfo();
               hl.removeAllMeshes();
               console.log(entityCount.names[result.thinInstanceIndex])
               // hl.addMesh(highlight_sphere, BABYLON.Color3.Green());
@@ -118,6 +141,10 @@ const BabylonVisualizer = () => {
         style={{ width: '100%', height: '100%', display: 'block' }}
         />
       </div>
+      {showInfo && <InfoBox name = {name} e={e} a={a} ma ={ma} i ={i} om ={om} w ={w} />
+      }
+
+
     </div>
   );
 };
